@@ -1,5 +1,7 @@
 # wechat-pay
 
+需要结合微信支付流程一起使用，这只是一个库而已
+
 ### 使用
 
 ```go
@@ -17,18 +19,18 @@ import (
 )
 
 func main() {
+    // 初始化配置
 	conf := &pay.Conf{
 		Appid:           "",
 		MchId:           "",
 		MchKey:          "",
-		NotifyUrl:       "",
-		RefundNotifyUrl: "",
 		CertPath:        "",
 		KeyPath:         "",
 		CaPath:          "",
 	}
 	pay.SetConf(conf)
 
+    // H5支付
 	jsApi := order.NewJSAPI()
 	jsApi.Body = "body"
 	jsApi.TotalFee = 1000000
@@ -44,7 +46,7 @@ func main() {
 	fmt.Println(prepay)
 
 
-    //PayNotifyHandle 支付通知逻辑
+    // 支付通知逻辑
     func PayNotifyHandle(w http.ResponseWriter, r *http.Request) {
         order.Notify(w, r, func(notify *order.NotifyResponse) error {
             fmt.Println(notify)
@@ -52,13 +54,17 @@ func main() {
         })
     }
 
-    //RefundNotifyHandle 退款通知逻辑
+    // 退款通知逻辑
     func RefundNotifyHandle(w http.ResponseWriter, r *http.Request) {
         refund.Notify(w, r, func(notify *refund.NotifyReqInfo) error {
             fmt.Println(notify)
             return nil
         })
     }
+
+
+
+
 }
 
 ```
